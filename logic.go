@@ -9,12 +9,13 @@ import (
 
 type service struct {
 	expiresInSec int64
+	alg          jwt.Algorithm
 	privateKey   []byte
 	publicKey    []byte
 }
 
 func (svc *service) GenerateToken(_ context.Context, userUUID string) (*AccessTokenResponse, error) {
-	at := jwt.New(jwt.RS256)
+	at := jwt.New(svc.alg)
 
 	now := time.Now()
 
@@ -28,7 +29,7 @@ func (svc *service) GenerateToken(_ context.Context, userUUID string) (*AccessTo
 		return nil, errors.Wrap(err, "error on sign access token")
 	}
 
-	rt := jwt.New(jwt.RS256)
+	rt := jwt.New(svc.alg)
 
 	rt.SetSubject(userUUID)
 
@@ -63,7 +64,9 @@ func (svc *service) RefreshToken(_ context.Context, refreshToken string) (*Acces
 		return nil, errors.Wrap(err, "error on get refresh token subject")
 	}
 
-	at := jwt.New(jwt.RS256)
+	// TODO: check refresh token algorithm
+
+	at := jwt.New(svc.alg)
 
 	now := time.Now()
 
@@ -121,8 +124,6 @@ func (svc *service) ValidateToken(_ context.Context, AccessToken string) (*Valid
 
 	return &rsp, nil
 }
-
-type Option func(*service)
 
 func New(options ...Option) Service {
 	svc := service{}
