@@ -1,4 +1,4 @@
-module github.com/nasermirzaei89/auth-svc
+module github.com/applicaset/auth-svc
 
 go 1.15
 
