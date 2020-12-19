@@ -1,4 +1,4 @@
-package auth
+package authsvc
 
 import "github.com/nasermirzaei89/jwt"
 

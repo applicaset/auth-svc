@@ -1,4 +1,4 @@
-package auth
+package authsvc
 
 import (
 	"context"
@@ -89,14 +89,14 @@ func (svc *service) RefreshToken(_ context.Context, refreshToken string) (*Acces
 	return &rsp, nil
 }
 
-func (svc *service) ValidateToken(_ context.Context, AccessToken string) (*ValidateTokenResponse, error) {
-	err := jwt.Verify(AccessToken, svc.publicKey)
+func (svc *service) ValidateToken(_ context.Context, accessToken string) (*ValidateTokenResponse, error) {
+	err := jwt.Verify(accessToken, svc.publicKey)
 	if err != nil {
 		// TODO: handle error
 		return nil, errors.Wrap(err, "error on verify access token")
 	}
 
-	at, err := jwt.Parse(AccessToken)
+	at, err := jwt.Parse(accessToken)
 	if err != nil {
 		return nil, errors.Wrap(err, "error on parse access token")
 	}
